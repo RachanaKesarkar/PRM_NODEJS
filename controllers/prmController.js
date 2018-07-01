@@ -2,7 +2,7 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 
 //connect to database
-mongoose.connect('mongodb://localhost/todo');
+mongoose.connect('mongodb://localhost/prm');
 
 //create schema
 var prmSchema = new mongoose.Schema({
@@ -67,19 +67,19 @@ var prmSchema = new mongoose.Schema({
         required: false,
     },
     accountDetails:[{
-        expenseParticulars: string,
-        billNo: string,
-        billDate: date,
-        billAmount: string,
-        approvedAmount: string,
-        grossAmount: string,
-        remarks: string
+        expenseParticulars: String,
+        billNo: String,
+        billDate: Date,
+        billAmount: String,
+        approvedAmount: String,
+        grossAmount: String,
+        remarks: String
     }]
 });
 
 var Prm = mongoose.model('Prm',prmSchema);
 
-var urlencodedParser = bodyParser.urlencoded({extended: false});
+var urlencodedParser = bodyParser.json();
 
 module.exports = function(app){
 
@@ -93,8 +93,9 @@ module.exports = function(app){
 
     app.post('/prm', urlencodedParser, function(req, res){
         //get data from view and add it to mongodb
+        console.log(req.body);
         var newPrm = Prm(req.body).save(function(err,data){
-            if (err) throw err;
+            if (err) console.log('error:' + err);
             res.json(data);
         });
     });
